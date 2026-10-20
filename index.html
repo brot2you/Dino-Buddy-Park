@@ -266,6 +266,18 @@ input[type=text],select{width:100%;font:inherit;font-size:17px;padding:10px 12px
 </style>
 <link rel="stylesheet" href="theme.css">
 <style>/* English-first learner interface */ .bubble .fr {display:none!important}</style>
+<style id="v13-shop-fix">
+/* V13: consistent, accurately named object icons across shop, price QCM and purchased decor. */
+.dino-item-art{display:inline-grid;place-items:center;width:66px;height:66px;max-width:100%;font-size:39px;line-height:1;border-radius:21px;background:radial-gradient(circle at 28% 20%,#fffdf0,#ffe9b5 76%,#e9bb78);border:3px solid #b8773b;box-shadow:0 5px 0 #9c623e, inset 0 2px 6px #ffffffa8;vertical-align:middle;filter:drop-shadow(0 1px 1px #50331680)}
+.shop-it .em{display:flex;justify-content:center;align-items:center;min-height:75px;font-size:inherit}
+.shop-it .dino-item-art{width:70px;height:70px}
+.sh-head .dino-item-art{width:55px;height:55px;font-size:32px;box-shadow:0 3px 0 #9c623e}
+.dino-decor-toggle .dino-item-art{width:43px;height:43px;font-size:26px;border-width:2px;border-radius:12px}
+.dino-decor-art{width:52px!important;height:52px!important;object-fit:contain;display:grid;place-items:center;font-size:36px;line-height:1;cursor:grab;touch-action:none;filter:drop-shadow(1px 3px 2px #0006);user-select:none}
+.shop-it{background:linear-gradient(160deg,#fff9eb,#e8f4da);border-color:#ccab75}
+.shop-it b{min-height:2.1em}
+@media(max-width:360px){.dino-item-art{width:51px;height:51px;font-size:32px}.shop-it .dino-item-art{width:55px;height:55px}}
+</style>
 </head>
 <body>
 <main class="wrap">
@@ -503,7 +515,7 @@ function speak(t){
   if (!('speechSynthesis' in window) || !t) return;
   try {
     window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(String(t).replace(/’/g, "'").replace(/[^\x00-\x7F\u00C0-\u017F']/g, ''));
+    var u = new SpeechSynthesisUtterance(String(t).replace(/’/g, "'"));
     u.lang = 'en-GB'; var v8=window.DINO_VOICE_V8||{}; if(v8.voice)u.voice=v8.voice;else if(VOICE)u.voice=VOICE;u.rate=(v8.rate||0.92);u.pitch=1.0;
     window.speechSynthesis.speak(u);
   } catch(e) {}
@@ -759,7 +771,7 @@ var DinoPrefs={zone:'camp',hidden:{},pos:{}};
 try{var dp=JSON.parse(localStorage.getItem(DINO_PREF_KEY)||'null');if(dp && DINO_ZONES[dp.zone]){DinoPrefs.zone=dp.zone;DinoPrefs.hidden=dp.hidden||{};DinoPrefs.pos=dp.pos||{};}}catch(ex){}
 function dinoSavePrefs(){try{localStorage.setItem(DINO_PREF_KEY,JSON.stringify(DinoPrefs));}catch(ex){}}
 function dinoAssetFor(id){return 'assets/props/'+(DINO_ITEMS[id]||'crate')+'.png';}
-function dinoShopPic(id){return '<img src="'+dinoAssetFor(id)+'" alt="" loading="lazy">';}
+function dinoShopPic(id){var it=shopItem(id);if(!it)return '';return '<span class="dino-item-art" role="img" aria-label="'+esc(it[2])+'">'+it[1]+'</span>';}
 function dinoMakeMap(){
  var h='<div class="dino-map-card" role="dialog" aria-modal="true" aria-labelledby="dinoMapTitle"><div class="dino-map-top"><h2 id="dinoMapTitle">🗺️ Explorer Dino Buddy Park</h2><button type="button" class="dino-map-close" data-dino-close aria-label="Fermer">✕</button></div>';
  h+='<p>Choisis un habitat pour tes dinosaures. Toutes les activités d’anglais et ta progression sont conservées.</p><div class="dino-map-grid">';
@@ -779,7 +791,7 @@ function dinoRoomDecor(){
   if(it[4]!=='room'||S.owned.indexOf(it[0])<0||DinoPrefs.hidden[it[0]])return;
   var position=DinoPrefs.pos[it[0]];
   var css=position?('left:'+Math.max(0,Math.min(90,position.x))+'%;top:'+Math.max(0,Math.min(80,position.y))+'%;right:auto;bottom:auto;'):(it[5]||'left:10px;bottom:10px;');
-  dh+='<img class="decor-img" data-decor-id="'+it[0]+'" src="'+dinoAssetFor(it[0])+'" alt="Décoration : '+esc(it[2])+'" draggable="false" style="'+css+'">';
+  dh+='<span class="decor-img dino-decor-art" data-decor-id="'+it[0]+'" role="img" aria-label="'+esc(it[2])+'" style="'+css+'">'+it[1]+'</span>';
  });
  var se=seasonNow();if(se&&se.decor&&S.stories[storyKey(se)])dh+='<span class="decor" style="left:10%;top:28%;font-size:27px">'+se.decor+'</span>';
  $('decors').innerHTML=dh;
@@ -1529,10 +1541,10 @@ function openShop(){
     }).join('') + '</div>';
   }
   var h = '<div class="sh-head"><b>🛍️ The Shop – 💷 £' + (S.coins || 0) + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
-  h += '<p class="soft">' + (is5() ? 'Listen to the price and pay the right amount!' : 'Écoute bien le prix et paie la bonne somme !') + '</p>';
-  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For ' + esc(B()) : 'Pour ' + esc(B())) + '</h3>' + grid('wear');
-  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For the habitat' : 'Pour son habitat') + '</h3>' + grid('room');
-  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'Eggs' : 'Œufs') + '</h3>' + grid('egg');
+  h += '<p class="soft">' + (is5() ? 'Listen to the price and pay the right amount!' : 'Listen carefully and select the correct price!' ) + '</p>';
+  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For ' + esc(B()) : 'For ' + esc(B())) + '</h3>' + grid('wear');
+  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For the habitat' : 'For the habitat') + '</h3>' + grid('room');
+  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'Eggs' : 'Eggs') + '</h3>' + grid('egg');
   sheet(h);
 }
 function shopIt(id){
@@ -1547,15 +1559,15 @@ function renderBuy(){
   var it = shopItem(SHOPSEL.id);
   var h = '<div class="sh-head"><b>' + dinoShopPic(it[0]) + ' ' + esc(it[2]) + '</b><button class="x" data-act="shop" aria-label="Retour">↩︎</button></div>';
   h += '<p class="big-q"><button class="icon-btn" data-act="sayPrice" style="font-size:34px;padding:10px 18px">🔊</button></p>';
-  h += '<p class="soft" style="text-align:center">' + (is5() ? 'How much is it? Listen and pay.' : 'Combien ça coûte ? Écoute et paie.') + ' (💷 £' + (S.coins || 0) + ')</p><div class="choices">';
+  h += '<p class="soft" style="text-align:center">' + (is5() ? 'How much is it? Listen and pay.' : 'How much is it? Listen and pay.') + ' (💷 £' + (S.coins || 0) + ')</p><div class="choices">';
   SHOPSEL.opts.forEach(function(p){ h += '<button class="choice" data-act="pay" data-p="' + p + '">£' + p + '</button>'; });
   h += '</div><p class="tip" id="buyTip"></p>';
   sheet(h);
 }
 function pay(p, el){
   var it = shopItem(SHOPSEL.id), price = it[3];
-  if (p !== price) { SHOPSEL.tries++; el.classList.add('bad'); el.disabled = true; beep(SND.ko); $('buyTip').innerHTML = (is5() ? 'Listen again! ' : 'Réécoute bien ! ') + (SHOPSEL.tries >= 2 ? '<b>' + esc(cap1(numWord(price))) + ' pounds = £' + price + '</b>' : ''); sayPrice(); return; }
-  if ((S.coins || 0) < price) { beep(SND.ko); el.classList.add('good'); $('buyTip').innerHTML = (is5() ? 'Right price! But you need £' + (price - S.coins) + ' more.' : 'Bon prix ! Mais il te manque £' + (price - S.coins) + '. Parle encore avec ' + esc(B()) + ' pour en gagner.'); speak('Sorry! You need ' + numWord(price - S.coins) + ' more pounds.'); return; }
+  if (p !== price) { SHOPSEL.tries++; el.classList.add('bad'); el.disabled = true; beep(SND.ko); $('buyTip').innerHTML = (is5() ? 'Listen again! ' : 'Listen again! ') + (SHOPSEL.tries >= 2 ? '<b>' + esc(cap1(numWord(price))) + ' pounds = £' + price + '</b>' : ''); sayPrice(); return; }
+  if ((S.coins || 0) < price) { beep(SND.ko); el.classList.add('good'); $('buyTip').innerHTML = (is5() ? 'Right price! But you need £' + (price - S.coins) + ' more.' : 'Correct price! You still need £' + (price - S.coins) + '. Parle encore avec ' + esc(B()) + ' pour en gagner.'); speak('Sorry! You need ' + numWord(price - S.coins) + ' more pounds.'); return; }
   S.coins -= price;
   if (it[4] === 'egg') { beep(SND.lvl); grantEgg(rollSpecies(Math.random() < 0.25 ? 'r' : 'c'), 'Va dans ＋🥚 pour le faire éclore.'); closeSheet(); renderHome(); return; }
   S.owned.push(it[0]); if (it[4] === 'wear') S.wear = it[0];
@@ -2226,13 +2238,14 @@ refresh();window.addEventListener('pagehide',function(){observer.disconnect()},{
  var key='dino_buddy_voice_prefs_v8';
  var saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
  var box=document.createElement('section');box.className='v8-voice-box';
- box.innerHTML='<h3>🎙️ Voix anglaise</h3><label for="v8Voice">Choisir une voix</label><select id="v8Voice" aria-label="Voix anglaise"><option value="">Voix automatique</option></select><label for="v8Speed">Vitesse de lecture : <span id="v8SpeedText">Normale</span></label><input id="v8Speed" type="range" min="0.75" max="1.10" step="0.05" value="0.90" style="width:100%"><div class="v8-voice-actions"><button type="button" id="v8Listen">▶ Écouter</button><button type="button" id="v8Stop">■ Arrêter</button></div><small>La qualité dépend des voix installées sur ton appareil. Privilégie une voix anglaise britannique naturelle si elle est disponible. Aucun compte ni service externe nécessaire.</small>';
+ box.innerHTML='<h3>🎙️ English voice</h3><label for="v8Voice">Choose a voice</label><select id="v8Voice" aria-label="English voice"><option value="">Automatic voice</option></select><label for="v8Speed">Speech speed: <span id="v8SpeedText">Normal</span></label><input id="v8Speed" type="range" min="0.75" max="1.10" step="0.05" value="0.90" style="width:100%"><div class="v8-voice-actions"><button type="button" id="v8Listen">▶ Preview</button><button type="button" id="v8Stop">■ Stop</button></div><small>Voice quality depends on the voices offered by your browser and operating system. Try a voice labelled Natural or Neural if available; this version does not use paid cloud voices.</small>';
  var host=document.getElementById('tab-set');if(!host)return;
  var anchor=host.querySelector('h3');if(anchor)host.insertBefore(box,anchor);else host.appendChild(box);
  var sel=box.querySelector('#v8Voice'),rate=box.querySelector('#v8Speed'),val=box.querySelector('#v8SpeedText');
  rate.value=String(Math.min(1.1,Math.max(.75,Number(saved.rate)||.9)));
- function load(){if(!('speechSynthesis' in window))return;var list=speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});var old=sel.value||saved.name||'';sel.innerHTML='<option value="">Automatique (anglais)</option>';list.sort(function(a,b){return (a.lang==='en-GB'?-1:0)-(b.lang==='en-GB'?-1:0)}).forEach(function(v){var opt=document.createElement('option');opt.value=v.voiceURI;opt.textContent=v.name+' — '+v.lang+(v.localService?'':' (en ligne)');sel.appendChild(opt)});sel.value=list.some(function(v){return v.voiceURI===old})?old:'';window.DINO_VOICE_V8={voice:list.find(function(v){return v.voiceURI===sel.value})||null,rate:parseFloat(rate.value)};}
- function update(){val.textContent=Number(rate.value)<.85?'Lente':Number(rate.value)>1?'Rapide':'Naturelle';load();try{localStorage.setItem(key,JSON.stringify({name:sel.value,rate:parseFloat(rate.value)}))}catch(e){}}
+ function voiceScore(v){var n=v.name.toLowerCase();return (/en[-_]gb/i.test(v.lang)?20:0)+(/natural|neural|premium|enhanced|online|aria|jenny|sonia|libby|ryan/i.test(n)?35:0)+(!v.localService?4:0)}
+ function load(){if(!('speechSynthesis' in window))return;var list=speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});var old=sel.value||saved.name||'';sel.innerHTML='<option value="">Best available English voice</option>';list.sort(function(a,b){return voiceScore(b)-voiceScore(a)}).forEach(function(v){var opt=document.createElement('option');opt.value=v.voiceURI;opt.textContent=v.name+' — '+v.lang+(v.localService?'':' (en ligne)');sel.appendChild(opt)});sel.value=list.some(function(v){return v.voiceURI===old})?old:'';window.DINO_VOICE_V8={voice:list.find(function(v){return v.voiceURI===sel.value})||list[0]||null,rate:parseFloat(rate.value)};}
+ function update(){val.textContent=Number(rate.value)<.85?'Slow':Number(rate.value)>1?'Fast':'Natural';load();try{localStorage.setItem(key,JSON.stringify({name:sel.value,rate:parseFloat(rate.value)}))}catch(e){}}
  sel.addEventListener('change',update);rate.addEventListener('input',update);
  box.querySelector('#v8Listen').addEventListener('click',function(){if(typeof speak==='function')speak('Good morning! Welcome to Dino Buddy Park. Let us learn English together!')});
  box.querySelector('#v8Stop').addEventListener('click',function(){if('speechSynthesis' in window)speechSynthesis.cancel()});

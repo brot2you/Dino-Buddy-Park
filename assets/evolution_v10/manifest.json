@@ -1,0 +1,14 @@
+{
+  "release": "V10",
+  "origin": "V9",
+  "evolution_assets": 36,
+  "species": [
+    "corgo",
+    "brolly",
+    "nibbles",
+    "zippy",
+    "snooze",
+    "quill"
+  ],
+  "note": "Six growth lineups from illustrated sprite sheets; all other species preserve original renderer. Illustrations extracted from sheets may require further manual cleanup."
+}

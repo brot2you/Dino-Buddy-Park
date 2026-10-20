@@ -282,3 +282,9 @@ body{background:radial-gradient(ellipse at 50% -15%,#fff4c6 0,transparent 49%),l
  .room.zone-volcano .scene-art{background-position:54% center}
 }
 @media(prefers-reduced-motion:reduce){.room .scene-art{animation:none!important}}
+
+/* V10: preserve all horns, tails, fins and wings. */
+.v10-illustrated-pet{display:block;width:100%;height:100%;overflow:visible!important}
+.buddy,.dino-emotion-stage,.evo-big{overflow:visible!important}
+.v10-illustrated-pet image{image-rendering:auto}
+@media(prefers-reduced-motion:reduce){.v10-illustrated-pet{animation:none!important}}

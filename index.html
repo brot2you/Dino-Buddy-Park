@@ -266,6 +266,46 @@ input[type=text],select{width:100%;font:inherit;font-size:17px;padding:10px 12px
 </style>
 <link rel="stylesheet" href="theme.css">
 <style>/* English-first learner interface */ .bubble .fr {display:none!important}</style>
+<style id="v13-shop-fix">
+/* V13: consistent, accurately named object icons across shop, price QCM and purchased decor. */
+.dino-item-art{display:inline-grid;place-items:center;width:66px;height:66px;max-width:100%;font-size:39px;line-height:1;border-radius:21px;background:radial-gradient(circle at 28% 20%,#fffdf0,#ffe9b5 76%,#e9bb78);border:3px solid #b8773b;box-shadow:0 5px 0 #9c623e, inset 0 2px 6px #ffffffa8;vertical-align:middle;filter:drop-shadow(0 1px 1px #50331680)}
+.shop-it .em{display:flex;justify-content:center;align-items:center;min-height:75px;font-size:inherit}
+.shop-it .dino-item-art{width:70px;height:70px}
+.sh-head .dino-item-art{width:55px;height:55px;font-size:32px;box-shadow:0 3px 0 #9c623e}
+.dino-decor-toggle .dino-item-art{width:43px;height:43px;font-size:26px;border-width:2px;border-radius:12px}
+.dino-decor-art{width:52px!important;height:52px!important;object-fit:contain;display:grid;place-items:center;font-size:36px;line-height:1;cursor:grab;touch-action:none;filter:drop-shadow(1px 3px 2px #0006);user-select:none}
+.shop-it{background:linear-gradient(160deg,#fff9eb,#e8f4da);border-color:#ccab75}
+.shop-it b{min-height:2.1em}
+@media(max-width:360px){.dino-item-art{width:51px;height:51px;font-size:32px}.shop-it .dino-item-art{width:55px;height:55px}}
+</style>
+<style id="v14-object-coherence">
+/* V14: one object, one recognizable icon across all game contexts. */
+.v14-purchase-object{margin:9px 0 11px;display:flex;align-items:center;justify-content:center;gap:14px;padding:12px;border-radius:19px;background:linear-gradient(130deg,#fff9e8,#e0efcd);border:2px solid #bc9b65;min-height:95px}
+.v14-purchase-object .dino-item-art{width:92px;height:92px;font-size:58px;border-radius:23px;flex-shrink:0}
+.v14-purchase-object strong{font-size:22px;line-height:1.15}
+.v14-answer-icon{display:grid;place-items:center;width:55px;height:55px;flex:none;font-size:38px;line-height:1;background:#fff9e8;border-radius:15px;border:2px solid #ddbd82}
+.v14-answer-label{display:block;min-width:0;font-size:16px;line-height:1.2;font-weight:700;overflow-wrap:anywhere}
+.choice.item{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;min-height:76px;gap:9px;padding:8px}
+.dino-decor-toggle .dino-item-art{flex:none}
+.dino-decor-art .dino-item-art{width:52px;height:52px;box-shadow:none;border-width:2px}
+@media(max-width:390px){.v14-answer-icon{width:47px;height:47px;font-size:32px}.choice.item{gap:5px;padding:5px}.v14-answer-label{font-size:14px}}
+</style>
+<style id="v15-premium-objects">
+/* V15: all quiz items and purchases display the exact same locally hosted labeled object art */
+.dino-item-art{background:none!important;border:0!important;box-shadow:none!important;filter:none!important;border-radius:0!important;width:76px;height:76px}
+.dino-item-art img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:auto}
+.v15-item-img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.v14-answer-icon{background:linear-gradient(140deg,#fffdf2,#d9eed4);border:2px solid #c7b78c;width:70px;height:70px;padding:2px}
+.v14-answer-icon .v15-item-img{width:100%;height:100%}
+.choice.item{min-height:90px;align-items:center}
+.dino-decor-art .dino-item-art,.dino-decor-toggle .dino-item-art{width:53px;height:53px}
+.dino-decor-art .dino-item-art{pointer-events:none}
+.shop-it .dino-item-art{width:88px;height:88px}
+.v14-purchase-object .dino-item-art{width:105px;height:105px}
+.given .v15-item-img{width:54px;height:54px}
+@media(max-width:390px){.v14-answer-icon{width:51px;height:51px;min-width:51px}.shop-it .dino-item-art{width:66px;height:66px}}
+@media(prefers-reduced-motion:reduce){.given{animation:none!important}}
+</style>
 </head>
 <body>
 <main class="wrap">
@@ -503,7 +543,7 @@ function speak(t){
   if (!('speechSynthesis' in window) || !t) return;
   try {
     window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(String(t).replace(/’/g, "'").replace(/[^\x00-\x7F\u00C0-\u017F']/g, ''));
+    var u = new SpeechSynthesisUtterance(String(t).replace(/’/g, "'"));
     u.lang = 'en-GB'; var v8=window.DINO_VOICE_V8||{}; if(v8.voice)u.voice=v8.voice;else if(VOICE)u.voice=VOICE;u.rate=(v8.rate||0.92);u.pitch=1.0;
     window.speechSynthesis.speak(u);
   } catch(e) {}
@@ -759,15 +799,22 @@ var DinoPrefs={zone:'camp',hidden:{},pos:{}};
 try{var dp=JSON.parse(localStorage.getItem(DINO_PREF_KEY)||'null');if(dp && DINO_ZONES[dp.zone]){DinoPrefs.zone=dp.zone;DinoPrefs.hidden=dp.hidden||{};DinoPrefs.pos=dp.pos||{};}}catch(ex){}
 function dinoSavePrefs(){try{localStorage.setItem(DINO_PREF_KEY,JSON.stringify(DinoPrefs));}catch(ex){}}
 function dinoAssetFor(id){return 'assets/props/'+(DINO_ITEMS[id]||'crate')+'.png';}
-function dinoShopPic(id){return '<img src="'+dinoAssetFor(id)+'" alt="" loading="lazy">';}
+function dinoShopPic(id){
+ var it=shopItem(id); if(!it)return '';
+ return '<span class="dino-item-art" role="img" aria-label="'+esc(it[2])+'"><img loading="lazy" src="assets/objects-v15/shop-'+encodeURIComponent(it[0])+'.webp" alt="" draggable="false"></span>';
+}
+function dinoItemPic(id){
+ var it=D.items[id];if(!it)return '';
+ return '<img class="v15-item-img" src="assets/objects-v15/items-'+encodeURIComponent(id)+'.webp" alt="" draggable="false">';
+}
 function dinoMakeMap(){
- var h='<div class="dino-map-card" role="dialog" aria-modal="true" aria-labelledby="dinoMapTitle"><div class="dino-map-top"><h2 id="dinoMapTitle">🗺️ Explorer Dino Buddy Park</h2><button type="button" class="dino-map-close" data-dino-close aria-label="Fermer">✕</button></div>';
+ var h='<div class="dino-map-card" role="dialog" aria-modal="true" aria-labelledby="dinoMapTitle"><div class="dino-map-top"><h2 id="dinoMapTitle">🗺️ Explorer Dino Buddy Park</h2><button type="button" class="dino-map-close" data-dino-close aria-label="Close">✕</button></div>';
  h+='<p>Choisis un habitat pour tes dinosaures. Toutes les activités d’anglais et ta progression sont conservées.</p><div class="dino-map-grid">';
  Object.keys(DINO_ZONES).forEach(function(z){var t=DINO_ZONES[z];h+='<button type="button" class="dino-map-tile'+(DinoPrefs.zone===z?' selected':'')+'" data-dino-zone="'+z+'" style="background-image:url(assets/scenes/'+z+'.webp)"><strong>'+t.icon+' '+t.title+'</strong><span>'+t.sub+'</span></button>';});
  h+='</div><h3>🪴 Mes décorations</h3><p>Active les objets achetés au Shop, puis fais-les glisser dans l’habitat pour les placer.</p>';
  var owned=D.shop.filter(function(it){return it[4]==='room'&&S.owned.indexOf(it[0])>=0});
  if(!owned.length)h+='<p class="empty">Achète des décorations dans le Shop pour personnaliser ton habitat.</p>';
- else{h+='<div class="dino-decor-list">';owned.forEach(function(it){h+='<button class="dino-decor-toggle" data-dino-decor="'+it[0]+'" aria-pressed="'+(DinoPrefs.hidden[it[0]]?'false':'true')+'"><img src="'+dinoAssetFor(it[0])+'" alt="">'+esc(it[2])+'</button>';});h+='</div>';}
+ else{h+='<div class="dino-decor-list">';owned.forEach(function(it){h+='<button class="dino-decor-toggle" data-dino-decor="'+it[0]+'" aria-pressed="'+(DinoPrefs.hidden[it[0]]?'false':'true')+'">' + dinoShopPic(it[0]) + ''+esc(it[2])+'</button>';});h+='</div>';}
  h+='</div>';
  var modal=$('dino-map');modal.innerHTML=h;modal.hidden=false;
  var close=modal.querySelector('[data-dino-close]');if(close)close.focus();
@@ -779,7 +826,7 @@ function dinoRoomDecor(){
   if(it[4]!=='room'||S.owned.indexOf(it[0])<0||DinoPrefs.hidden[it[0]])return;
   var position=DinoPrefs.pos[it[0]];
   var css=position?('left:'+Math.max(0,Math.min(90,position.x))+'%;top:'+Math.max(0,Math.min(80,position.y))+'%;right:auto;bottom:auto;'):(it[5]||'left:10px;bottom:10px;');
-  dh+='<img class="decor-img" data-decor-id="'+it[0]+'" src="'+dinoAssetFor(it[0])+'" alt="Décoration : '+esc(it[2])+'" draggable="false" style="'+css+'">';
+  dh+='<span class="decor-img dino-decor-art" data-decor-id="'+it[0]+'" role="img" aria-label="'+esc(it[2])+'" style="'+css+'">'+dinoShopPic(it[0])+'</span>';
  });
  var se=seasonNow();if(se&&se.decor&&S.stories[storyKey(se)])dh+='<span class="decor" style="left:10%;top:28%;font-size:27px">'+se.decor+'</span>';
  $('decors').innerHTML=dh;
@@ -904,7 +951,7 @@ function renderTray(){
     h += '<div class="choices">';
     e.opts.forEach(function(o, i){
       var cls = 'choice' + (e.k === 'need' ? ' item' : '') + (o.state === 'bad' ? ' bad' : o.state === 'good' ? ' good' : '');
-      var lab = e.k === 'need' ? '<span class="em">' + D.items[o.v].em + '</span>' + esc(D.items[o.v].en) : esc(o.t);
+      var lab = e.k === 'need' ? '<span class="v14-answer-icon" aria-hidden="true">' + dinoItemPic(o.v) + '</span><span class="v14-answer-label">' + esc(D.items[o.v].en) + '</span>' : esc(o.t);
       h += '<button class="' + cls + '" data-act="pick" data-i="' + i + '"' + (o.state ? ' disabled' : '') + '>' + lab + '</button>';
     });
     h += '</div>';
@@ -1237,7 +1284,7 @@ function success(e, o, prod){
     var nd = D.needs[e.id];
     lvup = gain(pts, 15);
     diaryAdd({type:'need', need:e.id, item:o.v, obj:e.obj || ''});
-    showGiven(D.items[o.v].em);
+    showGiven(dinoItemPic(o.v));
     var fav = curSp() && curSp().fav === o.v;
     setReply(e.egg ? 'Thank you! *knock knock*' : fav ? 'Wow! ' + cap1(D.items[o.v].en) + '! That’s my favourite! Thank you!' : rnd(nd.thanks), fav ? 'C’est son préféré !' : B() + ' te remercie.', e.id === 'tired' ? 'sleep' : 'joy');
     if (fav) { S.happy = clamp(S.happy + 10); coin += 1; }
@@ -1460,7 +1507,7 @@ function renderOrder(){
     var used = g.part.indexOf(st) < g.got;
     return used ? '' : '<button class="choice" data-act="ordPick" data-i="' + i + '"><span class="em">' + st.em + '</span>' + esc(cap1(fill(st.base, HIS()))) + '</button>';
   }).join('');
-  var h = '<div class="sh-head"><b>🧩 ' + (is5() ? 'Put ' + esc(B()) + '’s day in order' : 'Put ' + esc(B()) + '’s day in order') + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var h = '<div class="sh-head"><b>🧩 ' + (is5() ? 'Put ' + esc(B()) + '’s day in order' : 'Put ' + esc(B()) + '’s day in order') + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   h += '<p class="soft">' + (is5() ? 'What does ' + esc(B()) + ' do first? Tap the actions in order.' : 'What does ' + esc(B()) + ' do first? Tap the actions in order.') + '</p>';
   h += '<div class="seq">' + seq + '</div>';
   if (g.got < g.part.length) h += '<div class="pool">' + pool + '</div>';
@@ -1482,7 +1529,7 @@ function clockGame(){
   renderClockQ();
 }
 function renderClockQ(){
-  var g = GM, h = '<div class="sh-head"><b>🕐 ' + (is5() ? 'Time quiz' : 'Quiz de l’heure') + ' (' + (g.i + 1) + '/' + g.qs.length + ')</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var g = GM, h = '<div class="sh-head"><b>🕐 ' + (is5() ? 'Time quiz' : 'Quiz de l’heure') + ' (' + (g.i + 1) + '/' + g.qs.length + ')</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   if (g.i >= g.qs.length) {
     var lv = gain(g.good * 4, 5); save();
     h += '<p class="score">' + g.good + '/' + g.qs.length + '</p><p class="soft" style="text-align:center">' + (g.good === g.qs.length ? 'Great! You know ' + esc(B()) + '’s day!' : 'Look at ' + esc(B()) + '’s day and try again!') + '</p><button class="primary" data-act="close">Terminer</button>';
@@ -1525,14 +1572,14 @@ function openShop(){
   function grid(kind){
     return '<div class="shop-grid">' + D.shop.filter(function(it){ return it[4] === kind; }).map(function(it){
       var own = kind !== 'egg' && S.owned.indexOf(it[0]) >= 0, worn = S.wear === it[0];
-      return '<button class="shop-it' + (own ? ' own' : '') + (worn ? ' worn' : '') + '" data-act="shopIt" data-id="' + it[0] + '"><span class="em">' + it[1] + '</span><b>' + esc(it[2]) + '</b><small>' + (own ? (kind === 'wear' ? (worn ? 'porté' : 'porter') : '✔︎') : '£' + it[3]) + '</small></button>';
+      return '<button class="shop-it' + (own ? ' own' : '') + (worn ? ' worn' : '') + '" data-act="shopIt" data-id="' + it[0] + '"><span class="em">' + dinoShopPic(it[0]) + '</span><b>' + esc(it[2]) + '</b><small>' + (own ? (kind === 'wear' ? (worn ? 'Equipped' : 'Equip') : '✔︎') : '£' + it[3]) + '</small></button>';
     }).join('') + '</div>';
   }
-  var h = '<div class="sh-head"><b>🛍️ The Shop – 💷 £' + (S.coins || 0) + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
-  h += '<p class="soft">' + (is5() ? 'Listen to the price and pay the right amount!' : 'Écoute bien le prix et paie la bonne somme !') + '</p>';
-  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For ' + esc(B()) : 'Pour ' + esc(B())) + '</h3>' + grid('wear');
-  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For the habitat' : 'Pour son habitat') + '</h3>' + grid('room');
-  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'Eggs' : 'Œufs') + '</h3>' + grid('egg');
+  var h = '<div class="sh-head"><b>🛍️ The Shop – 💷 £' + (S.coins || 0) + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
+  h += '<p class="soft">' + (is5() ? 'Listen to the price and pay the right amount!' : 'Listen carefully and select the correct price!' ) + '</p>';
+  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For ' + esc(B()) : 'For ' + esc(B())) + '</h3>' + grid('wear');
+  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For the habitat' : 'For the habitat') + '</h3>' + grid('room');
+  h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'Eggs' : 'Eggs') + '</h3>' + grid('egg');
   sheet(h);
 }
 function shopIt(id){
@@ -1545,17 +1592,17 @@ function shopIt(id){
 function sayPrice(){ var it = shopItem(SHOPSEL.id); speak('The ' + it[2] + (/s$/.test(it[2]) && it[2] !== 'glass' ? ' are ' : ' is ') + numWord(it[3]) + ' pounds.'); }
 function renderBuy(){
   var it = shopItem(SHOPSEL.id);
-  var h = '<div class="sh-head"><b>' + dinoShopPic(it[0]) + ' ' + esc(it[2]) + '</b><button class="x" data-act="shop" aria-label="Retour">↩︎</button></div>';
+  var h = '<div class="sh-head"><b>' + esc(it[2]) + '</b><button class="x" data-act="shop" aria-label="Back">↩︎</button></div><div class="v14-purchase-object">' + dinoShopPic(it[0]) + '<strong>' + esc(it[2]) + '</strong></div>';
   h += '<p class="big-q"><button class="icon-btn" data-act="sayPrice" style="font-size:34px;padding:10px 18px">🔊</button></p>';
-  h += '<p class="soft" style="text-align:center">' + (is5() ? 'How much is it? Listen and pay.' : 'Combien ça coûte ? Écoute et paie.') + ' (💷 £' + (S.coins || 0) + ')</p><div class="choices">';
+  h += '<p class="soft" style="text-align:center">' + (is5() ? 'How much is it? Listen and pay.' : 'How much is it? Listen and pay.') + ' (💷 £' + (S.coins || 0) + ')</p><div class="choices">';
   SHOPSEL.opts.forEach(function(p){ h += '<button class="choice" data-act="pay" data-p="' + p + '">£' + p + '</button>'; });
   h += '</div><p class="tip" id="buyTip"></p>';
   sheet(h);
 }
 function pay(p, el){
   var it = shopItem(SHOPSEL.id), price = it[3];
-  if (p !== price) { SHOPSEL.tries++; el.classList.add('bad'); el.disabled = true; beep(SND.ko); $('buyTip').innerHTML = (is5() ? 'Listen again! ' : 'Réécoute bien ! ') + (SHOPSEL.tries >= 2 ? '<b>' + esc(cap1(numWord(price))) + ' pounds = £' + price + '</b>' : ''); sayPrice(); return; }
-  if ((S.coins || 0) < price) { beep(SND.ko); el.classList.add('good'); $('buyTip').innerHTML = (is5() ? 'Right price! But you need £' + (price - S.coins) + ' more.' : 'Bon prix ! Mais il te manque £' + (price - S.coins) + '. Parle encore avec ' + esc(B()) + ' pour en gagner.'); speak('Sorry! You need ' + numWord(price - S.coins) + ' more pounds.'); return; }
+  if (p !== price) { SHOPSEL.tries++; el.classList.add('bad'); el.disabled = true; beep(SND.ko); $('buyTip').innerHTML = (is5() ? 'Listen again! ' : 'Listen again! ') + (SHOPSEL.tries >= 2 ? '<b>' + esc(cap1(numWord(price))) + ' pounds = £' + price + '</b>' : ''); sayPrice(); return; }
+  if ((S.coins || 0) < price) { beep(SND.ko); el.classList.add('good'); $('buyTip').innerHTML = (is5() ? 'Right price! But you need £' + (price - S.coins) + ' more.' : 'Correct price! You still need £' + (price - S.coins) + '. Parle encore avec ' + esc(B()) + ' pour en gagner.'); speak('Sorry! You need ' + numWord(price - S.coins) + ' more pounds.'); return; }
   S.coins -= price;
   if (it[4] === 'egg') { beep(SND.lvl); grantEgg(rollSpecies(Math.random() < 0.25 ? 'r' : 'c'), 'Va dans ＋🥚 pour le faire éclore.'); closeSheet(); renderHome(); return; }
   S.owned.push(it[0]); if (it[4] === 'wear') S.wear = it[0];
@@ -1616,7 +1663,7 @@ function openLesson(id){
 function lessonHead(){
   var x = structById(LS.id), d = '';
   for (var k = 0; k < LS.ex.length; k++) d += '<span class="' + (k < LS.res.length ? (LS.res[k] ? 'ok' : 'ko') : (k === LS.i ? 'cur' : '')) + '"></span>';
-  return '<div class="sh-head"><b>🧠 ' + esc(x.title) + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>' + (LS.i >= 0 ? '<div class="lp">' + d + '</div>' : '');
+  return '<div class="sh-head"><b>🧠 ' + esc(x.title) + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div>' + (LS.i >= 0 ? '<div class="lp">' + d + '</div>' : '');
 }
 function renderLesson(){
   var x = structById(LS.id), h = lessonHead();
@@ -1686,7 +1733,7 @@ function lessonNext(){ LS.i++; LS.tiles = null; LS.opts = null; renderLesson(); 
 
 /* ---------- Œufs et Buddydex ---------- */
 function openIncubator(){
-  var blk = adoptBlock(), h = '<div class="sh-head"><b>🥚 Mes œufs (' + S.eggs.length + ')</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var blk = adoptBlock(), h = '<div class="sh-head"><b>🥚 Mes œufs (' + S.eggs.length + ')</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   if (blk) h += '<div class="gate">' + esc(blk) + '</div>';
   if (S.eggs.length) {
     h += '<p class="soft">Choisis l’œuf à faire éclore. L’espèce reste une surprise !</p><div class="egg-list">' + S.eggs.map(function(id, i){ var x = SPX[id]; return '<button class="rar-' + x.r + '" data-act="incub" data-i="' + i + '">' + buddySVG('', {stage:0, sp:id}) + '<span class="rtag ' + x.r + '">' + RARFR[x.r] + '</span></button>'; }).join('') + '</div>';
@@ -1714,7 +1761,7 @@ function srcText(x){
   return 'Œuf commun : surprises du jour, stade Ado ou Shop.';
 }
 function openSpecies(id){
-  var x = SPX[id], known = S.dex[id] !== undefined, t = D.traits[x.trait], h = '<div class="sh-head"><b>#' + x.no + ' ' + (known ? esc(x.n) : '???') + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div><div class="sp-card">';
+  var x = SPX[id], known = S.dex[id] !== undefined, t = D.traits[x.trait], h = '<div class="sh-head"><b>#' + x.no + ' ' + (known ? esc(x.n) : '???') + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div><div class="sp-card">';
   h += '<div class="big">' + (known ? buddySVG('joy', {stage:Math.max(1, S.dex[id]), sp:id}) : buddySVG('', {stage:2, sp:id, ghost:true})) + '</div><span class="rtag ' + x.r + '">' + RARFR[x.r] + '</span>';
   if (known) {
     h += '<p><b>' + x.feat + ' ' + esc(x.home) + '</b></p><p>' + esc(x.fact) + '</p>';
@@ -1988,7 +2035,7 @@ function dinoCastPanel(){
   '</div><p class="dino-fine-print">Les émotions utilisent de nouvelles illustrations du personnage entier. Les poses sont des variantes adaptées à l’animation. Dans le jeu, des mouvements CSS ajoutent respiration, saut, joie, réconfort et sommeil.</p></div>';
 }
 function dinoCastOpen(){
- var h='<div class="dino-cast-card" role="dialog" aria-modal="true" aria-labelledby="dinoCastTitle"><div class="dino-cast-head"><h2 id="dinoCastTitle">🦖 Les 6 héros du camp</h2><button type="button" class="dino-map-close" data-cast-close aria-label="Fermer">✕</button></div>';
+ var h='<div class="dino-cast-card" role="dialog" aria-modal="true" aria-labelledby="dinoCastTitle"><div class="dino-cast-head"><h2 id="dinoCastTitle">🦖 Les 6 héros du camp</h2><button type="button" class="dino-map-close" data-cast-close aria-label="Close">✕</button></div>';
  h+='<p>Six dinosaures redessinés avec un véritable fond transparent, des portraits d’émotions et des poses pour les interactions. Les règles et la progression du jeu sont inchangées.</p><div class="dino-cast-grid">';
  D.starters.forEach(function(id){var x=SPX[id];h+='<button type="button" class="dino-cast-it '+(DINO_CAST_SELECTED===id?'selected':'')+'" data-cast-pet="'+id+'" aria-pressed="'+(DINO_CAST_SELECTED===id?'true':'false')+'"><img loading="lazy" src="'+dinoAsset(id,'hero')+'" alt="Illustration de '+esc(x.n)+'"><b>'+esc(x.n)+'</b><span>'+esc(D.traits[x.trait].fr)+'</span></button>';});
  h+='</div><div id="dino-cast-emotions">'+dinoCastPanel()+'</div><p>Les dinosaures parlent toujours anglais : la collection, les œufs, les exercices, le Buddydex et les sauvegardes ont été conservés.</p></div>';
@@ -2226,13 +2273,14 @@ refresh();window.addEventListener('pagehide',function(){observer.disconnect()},{
  var key='dino_buddy_voice_prefs_v8';
  var saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
  var box=document.createElement('section');box.className='v8-voice-box';
- box.innerHTML='<h3>🎙️ Voix anglaise</h3><label for="v8Voice">Choisir une voix</label><select id="v8Voice" aria-label="Voix anglaise"><option value="">Voix automatique</option></select><label for="v8Speed">Vitesse de lecture : <span id="v8SpeedText">Normale</span></label><input id="v8Speed" type="range" min="0.75" max="1.10" step="0.05" value="0.90" style="width:100%"><div class="v8-voice-actions"><button type="button" id="v8Listen">▶ Écouter</button><button type="button" id="v8Stop">■ Arrêter</button></div><small>La qualité dépend des voix installées sur ton appareil. Privilégie une voix anglaise britannique naturelle si elle est disponible. Aucun compte ni service externe nécessaire.</small>';
+ box.innerHTML='<h3>🎙️ English voice</h3><label for="v8Voice">Choose a voice</label><select id="v8Voice" aria-label="English voice"><option value="">Automatic voice</option></select><label for="v8Speed">Speech speed: <span id="v8SpeedText">Normal</span></label><input id="v8Speed" type="range" min="0.75" max="1.10" step="0.05" value="0.90" style="width:100%"><div class="v8-voice-actions"><button type="button" id="v8Listen">▶ Preview</button><button type="button" id="v8Stop">■ Stop</button></div><small>Voice quality depends on the voices offered by your browser and operating system. Try a voice labelled Natural or Neural if available; this version does not use paid cloud voices.</small>';
  var host=document.getElementById('tab-set');if(!host)return;
  var anchor=host.querySelector('h3');if(anchor)host.insertBefore(box,anchor);else host.appendChild(box);
  var sel=box.querySelector('#v8Voice'),rate=box.querySelector('#v8Speed'),val=box.querySelector('#v8SpeedText');
  rate.value=String(Math.min(1.1,Math.max(.75,Number(saved.rate)||.9)));
- function load(){if(!('speechSynthesis' in window))return;var list=speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});var old=sel.value||saved.name||'';sel.innerHTML='<option value="">Automatique (anglais)</option>';list.sort(function(a,b){return (a.lang==='en-GB'?-1:0)-(b.lang==='en-GB'?-1:0)}).forEach(function(v){var opt=document.createElement('option');opt.value=v.voiceURI;opt.textContent=v.name+' — '+v.lang+(v.localService?'':' (en ligne)');sel.appendChild(opt)});sel.value=list.some(function(v){return v.voiceURI===old})?old:'';window.DINO_VOICE_V8={voice:list.find(function(v){return v.voiceURI===sel.value})||null,rate:parseFloat(rate.value)};}
- function update(){val.textContent=Number(rate.value)<.85?'Lente':Number(rate.value)>1?'Rapide':'Naturelle';load();try{localStorage.setItem(key,JSON.stringify({name:sel.value,rate:parseFloat(rate.value)}))}catch(e){}}
+ function voiceScore(v){var n=v.name.toLowerCase();return (/en[-_]gb/i.test(v.lang)?20:0)+(/natural|neural|premium|enhanced|online|aria|jenny|sonia|libby|ryan/i.test(n)?35:0)+(!v.localService?4:0)}
+ function load(){if(!('speechSynthesis' in window))return;var list=speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});var old=sel.value||saved.name||'';sel.innerHTML='<option value="">Best available English voice</option>';list.sort(function(a,b){return voiceScore(b)-voiceScore(a)}).forEach(function(v){var opt=document.createElement('option');opt.value=v.voiceURI;opt.textContent=v.name+' — '+v.lang+(v.localService?'':' (en ligne)');sel.appendChild(opt)});sel.value=list.some(function(v){return v.voiceURI===old})?old:'';window.DINO_VOICE_V8={voice:list.find(function(v){return v.voiceURI===sel.value})||list[0]||null,rate:parseFloat(rate.value)};}
+ function update(){val.textContent=Number(rate.value)<.85?'Slow':Number(rate.value)>1?'Fast':'Natural';load();try{localStorage.setItem(key,JSON.stringify({name:sel.value,rate:parseFloat(rate.value)}))}catch(e){}}
  sel.addEventListener('change',update);rate.addEventListener('input',update);
  box.querySelector('#v8Listen').addEventListener('click',function(){if(typeof speak==='function')speak('Good morning! Welcome to Dino Buddy Park. Let us learn English together!')});
  box.querySelector('#v8Stop').addEventListener('click',function(){if('speechSynthesis' in window)speechSynthesis.cancel()});
@@ -2267,6 +2315,9 @@ window.buddySVG=buddySVG=function(face,opt){
 })();
 </script>
 <script src="english-ui.js" defer></script>
+<link rel="stylesheet" href="v12-buddydex.css">
+<script src="v12-buddydex.js" defer></script>
+<script src="v16-natural-english.js" defer></script>
 </body>
 </html>
 

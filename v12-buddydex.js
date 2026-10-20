@@ -11,7 +11,7 @@ function family(x){return FAMILY[(x.no-1)%6];}
 function name(x){return safe(x.n);}
 function item(x,known){
  const last=known?Math.max(1,Math.min(4,Number(S.dex[x.id])||1)):2;
- const render=buddySVG(known?'happy':'neutral',{stage:last,sp:x.id,ghost:!known});
+ const render=(known&&typeof V17_ART!=='undefined'&&V17_ART.has(x.id))?`<img class="v17-art" loading="lazy" src="assets/species-v17/${encodeURIComponent(x.id)}.webp" alt="${name(x)}">`:buddySVG(known?'happy':'neutral',{stage:last,sp:x.id,ghost:!known});
  return `<button type="button" class="v12-entry rarity-${safe(x.r)} ${known?'unlocked':'locked'}" data-act="spc" data-id="${safe(x.id)}" aria-label="${known?name(x):'Undiscovered species number '+x.no}">
  <span class="v12-entry-no">#${String(x.no).padStart(2,'0')}</span><span class="v12-rarity">${RARITY[x.r]||'Species'}</span>
  <span class="v12-portrait">${render}</span><strong>${known?name(x):'???'}</strong><small>${known?family(x):'Undiscovered'}</small></button>`;

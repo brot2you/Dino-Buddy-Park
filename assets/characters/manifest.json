@@ -1,0 +1,432 @@
+{
+  "project": "Dino Buddy Park",
+  "mainCharacterAssets": 50,
+  "species": [
+    {
+      "id": "corgo",
+      "name": "Corgo",
+      "rarity": "c",
+      "home": "Londres (Angleterre)",
+      "trait": "cuddly",
+      "profile": "corgo-profile.png"
+    },
+    {
+      "id": "brolly",
+      "name": "Brolly",
+      "rarity": "c",
+      "home": "Manchester (Angleterre)",
+      "trait": "explorer",
+      "profile": "brolly-profile.png"
+    },
+    {
+      "id": "nibbles",
+      "name": "Nibbles",
+      "rarity": "c",
+      "home": "Bath (Angleterre)",
+      "trait": "foodie",
+      "profile": "nibbles-profile.png"
+    },
+    {
+      "id": "zippy",
+      "name": "Zippy",
+      "rarity": "c",
+      "home": "Liverpool (Angleterre)",
+      "trait": "sporty",
+      "profile": "zippy-profile.png"
+    },
+    {
+      "id": "snooze",
+      "name": "Snooze",
+      "rarity": "c",
+      "home": "Cornouailles (Angleterre)",
+      "trait": "sleepy",
+      "profile": "snooze-profile.png"
+    },
+    {
+      "id": "quill",
+      "name": "Quill",
+      "rarity": "c",
+      "home": "Stratford-upon-Avon (Angleterre)",
+      "trait": "brainy",
+      "profile": "quill-profile.png"
+    },
+    {
+      "id": "doodle",
+      "name": "Doodle",
+      "rarity": "c",
+      "home": "Lake District (Angleterre)",
+      "trait": "artist",
+      "profile": "doodle-profile.png"
+    },
+    {
+      "id": "giggle",
+      "name": "Giggle",
+      "rarity": "c",
+      "home": "Brighton (Angleterre)",
+      "trait": "joker",
+      "profile": "giggle-profile.png"
+    },
+    {
+      "id": "wee",
+      "name": "Wee",
+      "rarity": "c",
+      "home": "Glasgow (Écosse)",
+      "trait": "shy",
+      "profile": "wee-profile.png"
+    },
+    {
+      "id": "tartan",
+      "name": "Tartan",
+      "rarity": "c",
+      "home": "Édimbourg (Écosse)",
+      "trait": "chatty",
+      "profile": "tartan-profile.png"
+    },
+    {
+      "id": "bara",
+      "name": "Bara",
+      "rarity": "c",
+      "home": "Cardiff (pays de Galles)",
+      "trait": "chatty",
+      "profile": "bara-profile.png"
+    },
+    {
+      "id": "shamy",
+      "name": "Shamy",
+      "rarity": "c",
+      "home": "Dublin (Irlande)",
+      "trait": "explorer",
+      "profile": "shamy-profile.png"
+    },
+    {
+      "id": "cliffy",
+      "name": "Cliffy",
+      "rarity": "c",
+      "home": "Falaises de Moher (Irlande)",
+      "trait": "sporty",
+      "profile": "cliffy-profile.png"
+    },
+    {
+      "id": "bigapple",
+      "name": "Bigapple",
+      "rarity": "c",
+      "home": "New York (États-Unis)",
+      "trait": "chatty",
+      "profile": "bigapple-profile.png"
+    },
+    {
+      "id": "jazzy",
+      "name": "Jazzy",
+      "rarity": "c",
+      "home": "La Nouvelle-Orléans (États-Unis)",
+      "trait": "artist",
+      "profile": "jazzy-profile.png"
+    },
+    {
+      "id": "surfy",
+      "name": "Surfy",
+      "rarity": "c",
+      "home": "Californie (États-Unis)",
+      "trait": "sporty",
+      "profile": "surfy-profile.png"
+    },
+    {
+      "id": "chilli",
+      "name": "Chilli",
+      "rarity": "c",
+      "home": "Texas (États-Unis)",
+      "trait": "foodie",
+      "profile": "chilli-profile.png"
+    },
+    {
+      "id": "maple",
+      "name": "Maple",
+      "rarity": "c",
+      "home": "Québec (Canada)",
+      "trait": "foodie",
+      "profile": "maple-profile.png"
+    },
+    {
+      "id": "moosey",
+      "name": "Moosey",
+      "rarity": "c",
+      "home": "Banff (Canada)",
+      "trait": "sleepy",
+      "profile": "moosey-profile.png"
+    },
+    {
+      "id": "roo",
+      "name": "Roo",
+      "rarity": "c",
+      "home": "Sydney (Australie)",
+      "trait": "chatty",
+      "profile": "roo-profile.png"
+    },
+    {
+      "id": "reefy",
+      "name": "Reefy",
+      "rarity": "c",
+      "home": "Grande Barrière de corail (Australie)",
+      "trait": "explorer",
+      "profile": "reefy-profile.png"
+    },
+    {
+      "id": "kiwi",
+      "name": "Kiwi",
+      "rarity": "c",
+      "home": "Nouvelle-Zélande",
+      "trait": "shy",
+      "profile": "kiwi-profile.png"
+    },
+    {
+      "id": "safari",
+      "name": "Safari",
+      "rarity": "c",
+      "home": "Masai Mara (Kenya)",
+      "trait": "explorer",
+      "profile": "safari-profile.png"
+    },
+    {
+      "id": "tabla",
+      "name": "Tabla",
+      "rarity": "c",
+      "home": "Mumbai (Inde)",
+      "trait": "sporty",
+      "profile": "tabla-profile.png"
+    },
+    {
+      "id": "reggae",
+      "name": "Reggae",
+      "rarity": "c",
+      "home": "Kingston (Jamaïque)",
+      "trait": "artist",
+      "profile": "reggae-profile.png"
+    },
+    {
+      "id": "tably",
+      "name": "Tably",
+      "rarity": "c",
+      "home": "Le Cap (Afrique du Sud)",
+      "trait": "explorer",
+      "profile": "tably-profile.png"
+    },
+    {
+      "id": "bobby",
+      "name": "Bobby",
+      "rarity": "r",
+      "home": "Londres (Angleterre)",
+      "trait": "brainy",
+      "profile": "bobby-profile.png"
+    },
+    {
+      "id": "ravenny",
+      "name": "Ravenny",
+      "rarity": "r",
+      "home": "Tour de Londres",
+      "trait": "shy",
+      "profile": "ravenny-profile.png"
+    },
+    {
+      "id": "puffy",
+      "name": "Puffy",
+      "rarity": "r",
+      "home": "Île de Skomer (pays de Galles)",
+      "trait": "cuddly",
+      "profile": "puffy-profile.png"
+    },
+    {
+      "id": "hootie",
+      "name": "Hootie",
+      "rarity": "r",
+      "home": "Oxford (Angleterre)",
+      "trait": "brainy",
+      "profile": "hootie-profile.png"
+    },
+    {
+      "id": "geysy",
+      "name": "Geysy",
+      "rarity": "r",
+      "home": "Yellowstone (États-Unis)",
+      "trait": "explorer",
+      "profile": "geysy-profile.png"
+    },
+    {
+      "id": "orky",
+      "name": "Orky",
+      "rarity": "r",
+      "home": "Vancouver (Canada)",
+      "trait": "sporty",
+      "profile": "orky-profile.png"
+    },
+    {
+      "id": "wombo",
+      "name": "Wombo",
+      "rarity": "r",
+      "home": "Tasmanie (Australie)",
+      "trait": "sleepy",
+      "profile": "wombo-profile.png"
+    },
+    {
+      "id": "dingdong",
+      "name": "Ding Dong",
+      "rarity": "r",
+      "home": "Westminster (Londres)",
+      "trait": "joker",
+      "profile": "dingdong-profile.png"
+    },
+    {
+      "id": "pumpko",
+      "name": "Pumpko",
+      "rarity": "s",
+      "home": "Irlande",
+      "trait": "joker",
+      "profile": "pumpko-profile.png"
+    },
+    {
+      "id": "sparky",
+      "name": "Sparky",
+      "rarity": "s",
+      "home": "Londres (Angleterre)",
+      "trait": "artist",
+      "profile": "sparky-profile.png"
+    },
+    {
+      "id": "gobble",
+      "name": "Gobble",
+      "rarity": "s",
+      "home": "Massachusetts (États-Unis)",
+      "trait": "foodie",
+      "profile": "gobble-profile.png"
+    },
+    {
+      "id": "snowby",
+      "name": "Snowby",
+      "rarity": "s",
+      "home": "Trafalgar Square (Londres)",
+      "trait": "cuddly",
+      "profile": "snowby-profile.png"
+    },
+    {
+      "id": "hoggy",
+      "name": "Hoggy",
+      "rarity": "s",
+      "home": "Édimbourg (Écosse)",
+      "trait": "chatty",
+      "profile": "hoggy-profile.png"
+    },
+    {
+      "id": "lovey",
+      "name": "Lovey",
+      "rarity": "s",
+      "home": "Royaume-Uni",
+      "trait": "cuddly",
+      "profile": "lovey-profile.png"
+    },
+    {
+      "id": "flippy",
+      "name": "Flippy",
+      "rarity": "s",
+      "home": "Olney (Angleterre)",
+      "trait": "foodie",
+      "profile": "flippy-profile.png"
+    },
+    {
+      "id": "clover",
+      "name": "Clover",
+      "rarity": "s",
+      "home": "Irlande",
+      "trait": "explorer",
+      "profile": "clover-profile.png"
+    },
+    {
+      "id": "jester",
+      "name": "Jester",
+      "rarity": "s",
+      "home": "Royaume-Uni",
+      "trait": "joker",
+      "profile": "jester-profile.png"
+    },
+    {
+      "id": "bunbun",
+      "name": "Bunbun",
+      "rarity": "s",
+      "home": "Angleterre",
+      "trait": "shy",
+      "profile": "bunbun-profile.png"
+    },
+    {
+      "id": "sunny",
+      "name": "Sunny",
+      "rarity": "s",
+      "home": "Royaume-Uni",
+      "trait": "sporty",
+      "profile": "sunny-profile.png"
+    },
+    {
+      "id": "nessie",
+      "name": "Nessie",
+      "rarity": "e",
+      "home": "Loch Ness (Écosse)",
+      "trait": "shy",
+      "profile": "nessie-profile.png"
+    },
+    {
+      "id": "draig",
+      "name": "Draig",
+      "rarity": "e",
+      "home": "Pays de Galles",
+      "trait": "sporty",
+      "profile": "draig-profile.png"
+    },
+    {
+      "id": "unico",
+      "name": "Unico",
+      "rarity": "e",
+      "home": "Écosse",
+      "trait": "artist",
+      "profile": "unico-profile.png"
+    },
+    {
+      "id": "selkie",
+      "name": "Selkie",
+      "rarity": "e",
+      "home": "Orcades (Écosse)",
+      "trait": "cuddly",
+      "profile": "selkie-profile.png"
+    },
+    {
+      "id": "gryphon",
+      "name": "Gryphon",
+      "rarity": "e",
+      "home": "Oxford (Angleterre)",
+      "trait": "brainy",
+      "profile": "gryphon-profile.png"
+    }
+  ],
+  "starters": [
+    "corgo",
+    "brolly",
+    "nibbles",
+    "zippy",
+    "snooze",
+    "quill"
+  ],
+  "states": [
+    "happy",
+    "neutral",
+    "joy",
+    "sleep",
+    "sad",
+    "ill",
+    "scared",
+    "bored"
+  ],
+  "stages": [
+    "egg",
+    "baby",
+    "child",
+    "teen",
+    "adult"
+  ],
+  "note": "The app generates matching expressions/evolution variants for all 50 species dynamically via buddySVG. PNG files are editable starter/reference artwork, not a substitute for interactive state."
+}

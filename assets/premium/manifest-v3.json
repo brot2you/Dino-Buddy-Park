@@ -1,0 +1,119 @@
+{
+  "version": "3.0",
+  "species": {
+    "corgo": {
+      "hero": "corgo-hero.webp",
+      "moods": {
+        "neutral": "corgo-neutral.webp",
+        "happy": "corgo-happy.webp",
+        "sad": "corgo-sad.webp",
+        "scared": "corgo-scared.webp",
+        "sleep": "corgo-sleep.webp",
+        "hungry": "corgo-hungry.webp",
+        "joy": "corgo-joy.webp"
+      },
+      "actions": {
+        "idle": "corgo-action-idle.webp",
+        "jump": "corgo-action-jump.webp",
+        "eating": "corgo-action-eating.webp",
+        "sleeping": "corgo-action-sleeping.webp",
+        "playing": "corgo-action-playing.webp"
+      }
+    },
+    "brolly": {
+      "hero": "brolly-hero.webp",
+      "moods": {
+        "neutral": "brolly-neutral.webp",
+        "happy": "brolly-happy.webp",
+        "sad": "brolly-sad.webp",
+        "scared": "brolly-scared.webp",
+        "sleep": "brolly-sleep.webp",
+        "hungry": "brolly-hungry.webp",
+        "joy": "brolly-joy.webp"
+      },
+      "actions": {
+        "idle": "brolly-action-idle.webp",
+        "jump": "brolly-action-jump.webp",
+        "eating": "brolly-action-eating.webp",
+        "sleeping": "brolly-action-sleeping.webp",
+        "playing": "brolly-action-playing.webp"
+      }
+    },
+    "nibbles": {
+      "hero": "nibbles-hero.webp",
+      "moods": {
+        "neutral": "nibbles-neutral.webp",
+        "happy": "nibbles-happy.webp",
+        "sad": "nibbles-sad.webp",
+        "scared": "nibbles-scared.webp",
+        "sleep": "nibbles-sleep.webp",
+        "hungry": "nibbles-hungry.webp",
+        "joy": "nibbles-joy.webp"
+      },
+      "actions": {
+        "idle": "nibbles-action-idle.webp",
+        "jump": "nibbles-action-jump.webp",
+        "eating": "nibbles-action-eating.webp",
+        "sleeping": "nibbles-action-sleeping.webp",
+        "playing": "nibbles-action-playing.webp"
+      }
+    },
+    "zippy": {
+      "hero": "zippy-hero.webp",
+      "moods": {
+        "neutral": "zippy-neutral.webp",
+        "happy": "zippy-happy.webp",
+        "sad": "zippy-sad.webp",
+        "scared": "zippy-scared.webp",
+        "sleep": "zippy-sleep.webp",
+        "hungry": "zippy-hungry.webp",
+        "joy": "zippy-joy.webp"
+      },
+      "actions": {
+        "idle": "zippy-action-idle.webp",
+        "jump": "zippy-action-jump.webp",
+        "eating": "zippy-action-eating.webp",
+        "sleeping": "zippy-action-sleeping.webp",
+        "playing": "zippy-action-playing.webp"
+      }
+    },
+    "snooze": {
+      "hero": "snooze-hero.webp",
+      "moods": {
+        "neutral": "snooze-neutral.webp",
+        "happy": "snooze-happy.webp",
+        "sad": "snooze-sad.webp",
+        "scared": "snooze-scared.webp",
+        "sleep": "snooze-sleep.webp",
+        "hungry": "snooze-hungry.webp",
+        "joy": "snooze-joy.webp"
+      },
+      "actions": {
+        "idle": "snooze-action-idle.webp",
+        "jump": "snooze-action-jump.webp",
+        "eating": "snooze-action-eating.webp",
+        "sleeping": "snooze-action-sleeping.webp",
+        "playing": "snooze-action-playing.webp"
+      }
+    },
+    "quill": {
+      "hero": "quill-hero.webp",
+      "moods": {
+        "neutral": "quill-neutral.webp",
+        "happy": "quill-happy.webp",
+        "sad": "quill-sad.webp",
+        "scared": "quill-scared.webp",
+        "sleep": "quill-sleep.webp",
+        "hungry": "quill-hungry.webp",
+        "joy": "quill-joy.webp"
+      },
+      "actions": {
+        "idle": "quill-action-idle.webp",
+        "jump": "quill-action-jump.webp",
+        "eating": "quill-action-eating.webp",
+        "sleeping": "quill-action-sleeping.webp",
+        "playing": "quill-action-playing.webp"
+      }
+    }
+  }
+}

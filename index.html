@@ -278,6 +278,18 @@ input[type=text],select{width:100%;font:inherit;font-size:17px;padding:10px 12px
 .shop-it b{min-height:2.1em}
 @media(max-width:360px){.dino-item-art{width:51px;height:51px;font-size:32px}.shop-it .dino-item-art{width:55px;height:55px}}
 </style>
+<style id="v14-object-coherence">
+/* V14: one object, one recognizable icon across all game contexts. */
+.v14-purchase-object{margin:9px 0 11px;display:flex;align-items:center;justify-content:center;gap:14px;padding:12px;border-radius:19px;background:linear-gradient(130deg,#fff9e8,#e0efcd);border:2px solid #bc9b65;min-height:95px}
+.v14-purchase-object .dino-item-art{width:92px;height:92px;font-size:58px;border-radius:23px;flex-shrink:0}
+.v14-purchase-object strong{font-size:22px;line-height:1.15}
+.v14-answer-icon{display:grid;place-items:center;width:55px;height:55px;flex:none;font-size:38px;line-height:1;background:#fff9e8;border-radius:15px;border:2px solid #ddbd82}
+.v14-answer-label{display:block;min-width:0;font-size:16px;line-height:1.2;font-weight:700;overflow-wrap:anywhere}
+.choice.item{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;min-height:76px;gap:9px;padding:8px}
+.dino-decor-toggle .dino-item-art{flex:none}
+.dino-decor-art .dino-item-art{width:52px;height:52px;box-shadow:none;border-width:2px}
+@media(max-width:390px){.v14-answer-icon{width:47px;height:47px;font-size:32px}.choice.item{gap:5px;padding:5px}.v14-answer-label{font-size:14px}}
+</style>
 </head>
 <body>
 <main class="wrap">
@@ -771,15 +783,15 @@ var DinoPrefs={zone:'camp',hidden:{},pos:{}};
 try{var dp=JSON.parse(localStorage.getItem(DINO_PREF_KEY)||'null');if(dp && DINO_ZONES[dp.zone]){DinoPrefs.zone=dp.zone;DinoPrefs.hidden=dp.hidden||{};DinoPrefs.pos=dp.pos||{};}}catch(ex){}
 function dinoSavePrefs(){try{localStorage.setItem(DINO_PREF_KEY,JSON.stringify(DinoPrefs));}catch(ex){}}
 function dinoAssetFor(id){return 'assets/props/'+(DINO_ITEMS[id]||'crate')+'.png';}
-function dinoShopPic(id){var it=shopItem(id);if(!it)return '';return '<span class="dino-item-art" role="img" aria-label="'+esc(it[2])+'">'+it[1]+'</span>';}
+function dinoShopPic(id){var it=shopItem(id);if(!it)return '';return '<span class="dino-item-art" role="img" aria-label="'+esc(it[2])+'">'+dinoShopPic(it[0])+'</span>';}
 function dinoMakeMap(){
- var h='<div class="dino-map-card" role="dialog" aria-modal="true" aria-labelledby="dinoMapTitle"><div class="dino-map-top"><h2 id="dinoMapTitle">🗺️ Explorer Dino Buddy Park</h2><button type="button" class="dino-map-close" data-dino-close aria-label="Fermer">✕</button></div>';
+ var h='<div class="dino-map-card" role="dialog" aria-modal="true" aria-labelledby="dinoMapTitle"><div class="dino-map-top"><h2 id="dinoMapTitle">🗺️ Explorer Dino Buddy Park</h2><button type="button" class="dino-map-close" data-dino-close aria-label="Close">✕</button></div>';
  h+='<p>Choisis un habitat pour tes dinosaures. Toutes les activités d’anglais et ta progression sont conservées.</p><div class="dino-map-grid">';
  Object.keys(DINO_ZONES).forEach(function(z){var t=DINO_ZONES[z];h+='<button type="button" class="dino-map-tile'+(DinoPrefs.zone===z?' selected':'')+'" data-dino-zone="'+z+'" style="background-image:url(assets/scenes/'+z+'.webp)"><strong>'+t.icon+' '+t.title+'</strong><span>'+t.sub+'</span></button>';});
  h+='</div><h3>🪴 Mes décorations</h3><p>Active les objets achetés au Shop, puis fais-les glisser dans l’habitat pour les placer.</p>';
  var owned=D.shop.filter(function(it){return it[4]==='room'&&S.owned.indexOf(it[0])>=0});
  if(!owned.length)h+='<p class="empty">Achète des décorations dans le Shop pour personnaliser ton habitat.</p>';
- else{h+='<div class="dino-decor-list">';owned.forEach(function(it){h+='<button class="dino-decor-toggle" data-dino-decor="'+it[0]+'" aria-pressed="'+(DinoPrefs.hidden[it[0]]?'false':'true')+'"><img src="'+dinoAssetFor(it[0])+'" alt="">'+esc(it[2])+'</button>';});h+='</div>';}
+ else{h+='<div class="dino-decor-list">';owned.forEach(function(it){h+='<button class="dino-decor-toggle" data-dino-decor="'+it[0]+'" aria-pressed="'+(DinoPrefs.hidden[it[0]]?'false':'true')+'">' + dinoShopPic(it[0]) + ''+esc(it[2])+'</button>';});h+='</div>';}
  h+='</div>';
  var modal=$('dino-map');modal.innerHTML=h;modal.hidden=false;
  var close=modal.querySelector('[data-dino-close]');if(close)close.focus();
@@ -791,7 +803,7 @@ function dinoRoomDecor(){
   if(it[4]!=='room'||S.owned.indexOf(it[0])<0||DinoPrefs.hidden[it[0]])return;
   var position=DinoPrefs.pos[it[0]];
   var css=position?('left:'+Math.max(0,Math.min(90,position.x))+'%;top:'+Math.max(0,Math.min(80,position.y))+'%;right:auto;bottom:auto;'):(it[5]||'left:10px;bottom:10px;');
-  dh+='<span class="decor-img dino-decor-art" data-decor-id="'+it[0]+'" role="img" aria-label="'+esc(it[2])+'" style="'+css+'">'+it[1]+'</span>';
+  dh+='<span class="decor-img dino-decor-art" data-decor-id="'+it[0]+'" role="img" aria-label="'+esc(it[2])+'" style="'+css+'">'+dinoShopPic(it[0])+'</span>';
  });
  var se=seasonNow();if(se&&se.decor&&S.stories[storyKey(se)])dh+='<span class="decor" style="left:10%;top:28%;font-size:27px">'+se.decor+'</span>';
  $('decors').innerHTML=dh;
@@ -916,7 +928,7 @@ function renderTray(){
     h += '<div class="choices">';
     e.opts.forEach(function(o, i){
       var cls = 'choice' + (e.k === 'need' ? ' item' : '') + (o.state === 'bad' ? ' bad' : o.state === 'good' ? ' good' : '');
-      var lab = e.k === 'need' ? '<span class="em">' + D.items[o.v].em + '</span>' + esc(D.items[o.v].en) : esc(o.t);
+      var lab = e.k === 'need' ? '<span class="v14-answer-icon" aria-hidden="true">' + D.items[o.v].em + '</span><span class="v14-answer-label">' + esc(D.items[o.v].en) + '</span>' : esc(o.t);
       h += '<button class="' + cls + '" data-act="pick" data-i="' + i + '"' + (o.state ? ' disabled' : '') + '>' + lab + '</button>';
     });
     h += '</div>';
@@ -1472,7 +1484,7 @@ function renderOrder(){
     var used = g.part.indexOf(st) < g.got;
     return used ? '' : '<button class="choice" data-act="ordPick" data-i="' + i + '"><span class="em">' + st.em + '</span>' + esc(cap1(fill(st.base, HIS()))) + '</button>';
   }).join('');
-  var h = '<div class="sh-head"><b>🧩 ' + (is5() ? 'Put ' + esc(B()) + '’s day in order' : 'Put ' + esc(B()) + '’s day in order') + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var h = '<div class="sh-head"><b>🧩 ' + (is5() ? 'Put ' + esc(B()) + '’s day in order' : 'Put ' + esc(B()) + '’s day in order') + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   h += '<p class="soft">' + (is5() ? 'What does ' + esc(B()) + ' do first? Tap the actions in order.' : 'What does ' + esc(B()) + ' do first? Tap the actions in order.') + '</p>';
   h += '<div class="seq">' + seq + '</div>';
   if (g.got < g.part.length) h += '<div class="pool">' + pool + '</div>';
@@ -1494,7 +1506,7 @@ function clockGame(){
   renderClockQ();
 }
 function renderClockQ(){
-  var g = GM, h = '<div class="sh-head"><b>🕐 ' + (is5() ? 'Time quiz' : 'Quiz de l’heure') + ' (' + (g.i + 1) + '/' + g.qs.length + ')</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var g = GM, h = '<div class="sh-head"><b>🕐 ' + (is5() ? 'Time quiz' : 'Quiz de l’heure') + ' (' + (g.i + 1) + '/' + g.qs.length + ')</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   if (g.i >= g.qs.length) {
     var lv = gain(g.good * 4, 5); save();
     h += '<p class="score">' + g.good + '/' + g.qs.length + '</p><p class="soft" style="text-align:center">' + (g.good === g.qs.length ? 'Great! You know ' + esc(B()) + '’s day!' : 'Look at ' + esc(B()) + '’s day and try again!') + '</p><button class="primary" data-act="close">Terminer</button>';
@@ -1537,10 +1549,10 @@ function openShop(){
   function grid(kind){
     return '<div class="shop-grid">' + D.shop.filter(function(it){ return it[4] === kind; }).map(function(it){
       var own = kind !== 'egg' && S.owned.indexOf(it[0]) >= 0, worn = S.wear === it[0];
-      return '<button class="shop-it' + (own ? ' own' : '') + (worn ? ' worn' : '') + '" data-act="shopIt" data-id="' + it[0] + '"><span class="em">' + it[1] + '</span><b>' + esc(it[2]) + '</b><small>' + (own ? (kind === 'wear' ? (worn ? 'porté' : 'porter') : '✔︎') : '£' + it[3]) + '</small></button>';
+      return '<button class="shop-it' + (own ? ' own' : '') + (worn ? ' worn' : '') + '" data-act="shopIt" data-id="' + it[0] + '"><span class="em">' + dinoShopPic(it[0]) + '</span><b>' + esc(it[2]) + '</b><small>' + (own ? (kind === 'wear' ? (worn ? 'Equipped' : 'Equip') : '✔︎') : '£' + it[3]) + '</small></button>';
     }).join('') + '</div>';
   }
-  var h = '<div class="sh-head"><b>🛍️ The Shop – 💷 £' + (S.coins || 0) + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var h = '<div class="sh-head"><b>🛍️ The Shop – 💷 £' + (S.coins || 0) + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   h += '<p class="soft">' + (is5() ? 'Listen to the price and pay the right amount!' : 'Listen carefully and select the correct price!' ) + '</p>';
   h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For ' + esc(B()) : 'For ' + esc(B())) + '</h3>' + grid('wear');
   h += '<h3 style="margin:8px 0 6px">' + (is5() ? 'For the habitat' : 'For the habitat') + '</h3>' + grid('room');
@@ -1557,7 +1569,7 @@ function shopIt(id){
 function sayPrice(){ var it = shopItem(SHOPSEL.id); speak('The ' + it[2] + (/s$/.test(it[2]) && it[2] !== 'glass' ? ' are ' : ' is ') + numWord(it[3]) + ' pounds.'); }
 function renderBuy(){
   var it = shopItem(SHOPSEL.id);
-  var h = '<div class="sh-head"><b>' + dinoShopPic(it[0]) + ' ' + esc(it[2]) + '</b><button class="x" data-act="shop" aria-label="Retour">↩︎</button></div>';
+  var h = '<div class="sh-head"><b>' + esc(it[2]) + '</b><button class="x" data-act="shop" aria-label="Back">↩︎</button></div><div class="v14-purchase-object">' + dinoShopPic(it[0]) + '<strong>' + esc(it[2]) + '</strong></div>';
   h += '<p class="big-q"><button class="icon-btn" data-act="sayPrice" style="font-size:34px;padding:10px 18px">🔊</button></p>';
   h += '<p class="soft" style="text-align:center">' + (is5() ? 'How much is it? Listen and pay.' : 'How much is it? Listen and pay.') + ' (💷 £' + (S.coins || 0) + ')</p><div class="choices">';
   SHOPSEL.opts.forEach(function(p){ h += '<button class="choice" data-act="pay" data-p="' + p + '">£' + p + '</button>'; });
@@ -1628,7 +1640,7 @@ function openLesson(id){
 function lessonHead(){
   var x = structById(LS.id), d = '';
   for (var k = 0; k < LS.ex.length; k++) d += '<span class="' + (k < LS.res.length ? (LS.res[k] ? 'ok' : 'ko') : (k === LS.i ? 'cur' : '')) + '"></span>';
-  return '<div class="sh-head"><b>🧠 ' + esc(x.title) + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>' + (LS.i >= 0 ? '<div class="lp">' + d + '</div>' : '');
+  return '<div class="sh-head"><b>🧠 ' + esc(x.title) + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div>' + (LS.i >= 0 ? '<div class="lp">' + d + '</div>' : '');
 }
 function renderLesson(){
   var x = structById(LS.id), h = lessonHead();
@@ -1698,7 +1710,7 @@ function lessonNext(){ LS.i++; LS.tiles = null; LS.opts = null; renderLesson(); 
 
 /* ---------- Œufs et Buddydex ---------- */
 function openIncubator(){
-  var blk = adoptBlock(), h = '<div class="sh-head"><b>🥚 Mes œufs (' + S.eggs.length + ')</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  var blk = adoptBlock(), h = '<div class="sh-head"><b>🥚 Mes œufs (' + S.eggs.length + ')</b><button class="x" data-act="close" aria-label="Close">✕</button></div>';
   if (blk) h += '<div class="gate">' + esc(blk) + '</div>';
   if (S.eggs.length) {
     h += '<p class="soft">Choisis l’œuf à faire éclore. L’espèce reste une surprise !</p><div class="egg-list">' + S.eggs.map(function(id, i){ var x = SPX[id]; return '<button class="rar-' + x.r + '" data-act="incub" data-i="' + i + '">' + buddySVG('', {stage:0, sp:id}) + '<span class="rtag ' + x.r + '">' + RARFR[x.r] + '</span></button>'; }).join('') + '</div>';
@@ -1726,7 +1738,7 @@ function srcText(x){
   return 'Œuf commun : surprises du jour, stade Ado ou Shop.';
 }
 function openSpecies(id){
-  var x = SPX[id], known = S.dex[id] !== undefined, t = D.traits[x.trait], h = '<div class="sh-head"><b>#' + x.no + ' ' + (known ? esc(x.n) : '???') + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div><div class="sp-card">';
+  var x = SPX[id], known = S.dex[id] !== undefined, t = D.traits[x.trait], h = '<div class="sh-head"><b>#' + x.no + ' ' + (known ? esc(x.n) : '???') + '</b><button class="x" data-act="close" aria-label="Close">✕</button></div><div class="sp-card">';
   h += '<div class="big">' + (known ? buddySVG('joy', {stage:Math.max(1, S.dex[id]), sp:id}) : buddySVG('', {stage:2, sp:id, ghost:true})) + '</div><span class="rtag ' + x.r + '">' + RARFR[x.r] + '</span>';
   if (known) {
     h += '<p><b>' + x.feat + ' ' + esc(x.home) + '</b></p><p>' + esc(x.fact) + '</p>';
@@ -2000,7 +2012,7 @@ function dinoCastPanel(){
   '</div><p class="dino-fine-print">Les émotions utilisent de nouvelles illustrations du personnage entier. Les poses sont des variantes adaptées à l’animation. Dans le jeu, des mouvements CSS ajoutent respiration, saut, joie, réconfort et sommeil.</p></div>';
 }
 function dinoCastOpen(){
- var h='<div class="dino-cast-card" role="dialog" aria-modal="true" aria-labelledby="dinoCastTitle"><div class="dino-cast-head"><h2 id="dinoCastTitle">🦖 Les 6 héros du camp</h2><button type="button" class="dino-map-close" data-cast-close aria-label="Fermer">✕</button></div>';
+ var h='<div class="dino-cast-card" role="dialog" aria-modal="true" aria-labelledby="dinoCastTitle"><div class="dino-cast-head"><h2 id="dinoCastTitle">🦖 Les 6 héros du camp</h2><button type="button" class="dino-map-close" data-cast-close aria-label="Close">✕</button></div>';
  h+='<p>Six dinosaures redessinés avec un véritable fond transparent, des portraits d’émotions et des poses pour les interactions. Les règles et la progression du jeu sont inchangées.</p><div class="dino-cast-grid">';
  D.starters.forEach(function(id){var x=SPX[id];h+='<button type="button" class="dino-cast-it '+(DINO_CAST_SELECTED===id?'selected':'')+'" data-cast-pet="'+id+'" aria-pressed="'+(DINO_CAST_SELECTED===id?'true':'false')+'"><img loading="lazy" src="'+dinoAsset(id,'hero')+'" alt="Illustration de '+esc(x.n)+'"><b>'+esc(x.n)+'</b><span>'+esc(D.traits[x.trait].fr)+'</span></button>';});
  h+='</div><div id="dino-cast-emotions">'+dinoCastPanel()+'</div><p>Les dinosaures parlent toujours anglais : la collection, les œufs, les exercices, le Buddydex et les sauvegardes ont été conservés.</p></div>';

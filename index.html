@@ -290,6 +290,22 @@ input[type=text],select{width:100%;font:inherit;font-size:17px;padding:10px 12px
 .dino-decor-art .dino-item-art{width:52px;height:52px;box-shadow:none;border-width:2px}
 @media(max-width:390px){.v14-answer-icon{width:47px;height:47px;font-size:32px}.choice.item{gap:5px;padding:5px}.v14-answer-label{font-size:14px}}
 </style>
+<style id="v15-premium-objects">
+/* V15: all quiz items and purchases display the exact same locally hosted labeled object art */
+.dino-item-art{background:none!important;border:0!important;box-shadow:none!important;filter:none!important;border-radius:0!important;width:76px;height:76px}
+.dino-item-art img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:auto}
+.v15-item-img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.v14-answer-icon{background:linear-gradient(140deg,#fffdf2,#d9eed4);border:2px solid #c7b78c;width:70px;height:70px;padding:2px}
+.v14-answer-icon .v15-item-img{width:100%;height:100%}
+.choice.item{min-height:90px;align-items:center}
+.dino-decor-art .dino-item-art,.dino-decor-toggle .dino-item-art{width:53px;height:53px}
+.dino-decor-art .dino-item-art{pointer-events:none}
+.shop-it .dino-item-art{width:88px;height:88px}
+.v14-purchase-object .dino-item-art{width:105px;height:105px}
+.given .v15-item-img{width:54px;height:54px}
+@media(max-width:390px){.v14-answer-icon{width:51px;height:51px;min-width:51px}.shop-it .dino-item-art{width:66px;height:66px}}
+@media(prefers-reduced-motion:reduce){.given{animation:none!important}}
+</style>
 </head>
 <body>
 <main class="wrap">
@@ -783,7 +799,14 @@ var DinoPrefs={zone:'camp',hidden:{},pos:{}};
 try{var dp=JSON.parse(localStorage.getItem(DINO_PREF_KEY)||'null');if(dp && DINO_ZONES[dp.zone]){DinoPrefs.zone=dp.zone;DinoPrefs.hidden=dp.hidden||{};DinoPrefs.pos=dp.pos||{};}}catch(ex){}
 function dinoSavePrefs(){try{localStorage.setItem(DINO_PREF_KEY,JSON.stringify(DinoPrefs));}catch(ex){}}
 function dinoAssetFor(id){return 'assets/props/'+(DINO_ITEMS[id]||'crate')+'.png';}
-function dinoShopPic(id){var it=shopItem(id);if(!it)return '';return '<span class="dino-item-art" role="img" aria-label="'+esc(it[2])+'">'+dinoShopPic(it[0])+'</span>';}
+function dinoShopPic(id){
+ var it=shopItem(id); if(!it)return '';
+ return '<span class="dino-item-art" role="img" aria-label="'+esc(it[2])+'"><img loading="lazy" src="assets/objects-v15/shop-'+encodeURIComponent(it[0])+'.webp" alt="" draggable="false"></span>';
+}
+function dinoItemPic(id){
+ var it=D.items[id];if(!it)return '';
+ return '<img class="v15-item-img" src="assets/objects-v15/items-'+encodeURIComponent(id)+'.webp" alt="" draggable="false">';
+}
 function dinoMakeMap(){
  var h='<div class="dino-map-card" role="dialog" aria-modal="true" aria-labelledby="dinoMapTitle"><div class="dino-map-top"><h2 id="dinoMapTitle">🗺️ Explorer Dino Buddy Park</h2><button type="button" class="dino-map-close" data-dino-close aria-label="Close">✕</button></div>';
  h+='<p>Choisis un habitat pour tes dinosaures. Toutes les activités d’anglais et ta progression sont conservées.</p><div class="dino-map-grid">';
@@ -928,7 +951,7 @@ function renderTray(){
     h += '<div class="choices">';
     e.opts.forEach(function(o, i){
       var cls = 'choice' + (e.k === 'need' ? ' item' : '') + (o.state === 'bad' ? ' bad' : o.state === 'good' ? ' good' : '');
-      var lab = e.k === 'need' ? '<span class="v14-answer-icon" aria-hidden="true">' + D.items[o.v].em + '</span><span class="v14-answer-label">' + esc(D.items[o.v].en) + '</span>' : esc(o.t);
+      var lab = e.k === 'need' ? '<span class="v14-answer-icon" aria-hidden="true">' + dinoItemPic(o.v) + '</span><span class="v14-answer-label">' + esc(D.items[o.v].en) + '</span>' : esc(o.t);
       h += '<button class="' + cls + '" data-act="pick" data-i="' + i + '"' + (o.state ? ' disabled' : '') + '>' + lab + '</button>';
     });
     h += '</div>';
@@ -1261,7 +1284,7 @@ function success(e, o, prod){
     var nd = D.needs[e.id];
     lvup = gain(pts, 15);
     diaryAdd({type:'need', need:e.id, item:o.v, obj:e.obj || ''});
-    showGiven(D.items[o.v].em);
+    showGiven(dinoItemPic(o.v));
     var fav = curSp() && curSp().fav === o.v;
     setReply(e.egg ? 'Thank you! *knock knock*' : fav ? 'Wow! ' + cap1(D.items[o.v].en) + '! That’s my favourite! Thank you!' : rnd(nd.thanks), fav ? 'C’est son préféré !' : B() + ' te remercie.', e.id === 'tired' ? 'sleep' : 'joy');
     if (fav) { S.happy = clamp(S.happy + 10); coin += 1; }

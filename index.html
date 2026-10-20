@@ -1435,7 +1435,7 @@ function stepSentence(st, past){ return past ? 'I ' + fill(st.past, 'my') : B() 
 function renderDay(){
   var c = ctx(), r = c.routine;
   $('dayTitle').textContent = B() + '’s ' + (c.weekend ? 'weekend' : 'school day');
-  $('dayLead').textContent = (is5() ? 'Tap a line to listen. Help ' + B() + ' at the right time on the home screen!' : 'Touche une ligne pour l’écouter. Aide ' + B() + ' au bon moment depuis l’écran d’accueil !');
+  $('dayLead').textContent = (is5() ? 'Tap a line to listen. Help ' + B() + ' at the right time on the home screen!' : 'Tap a line to listen. Help ' + B() + ' at the right time on the home screen!');
   $('steps').innerHTML = r.map(function(st){
     var done = S.done.ids.indexOf(st.id) >= 0, now = c.step && c.step.id === st.id;
     return '<li><button class="step' + (done ? ' done' : '') + (now ? ' now' : '') + '" data-act="sayStep" data-id="' + st.id + '"><span class="em">' + st.em + '</span><span class="tm">' + st.time + '</span><span class="tx">' + esc(stepSentence(st)) + '.</span><span class="st">' + (done ? '✅' : now ? '👉' : '') + '</span></button></li>';
@@ -1460,8 +1460,8 @@ function renderOrder(){
     var used = g.part.indexOf(st) < g.got;
     return used ? '' : '<button class="choice" data-act="ordPick" data-i="' + i + '"><span class="em">' + st.em + '</span>' + esc(cap1(fill(st.base, HIS()))) + '</button>';
   }).join('');
-  var h = '<div class="sh-head"><b>🧩 ' + (is5() ? 'Put ' + esc(B()) + '’s day in order' : 'Remets la journée de ' + esc(B()) + ' dans l’ordre') + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
-  h += '<p class="soft">' + (is5() ? 'What does ' + esc(B()) + ' do first? Tap the actions in order.' : 'Que fait ' + esc(B()) + ' en premier ? Touche les actions dans l’ordre.') + '</p>';
+  var h = '<div class="sh-head"><b>🧩 ' + (is5() ? 'Put ' + esc(B()) + '’s day in order' : 'Put ' + esc(B()) + '’s day in order') + '</b><button class="x" data-act="close" aria-label="Fermer">✕</button></div>';
+  h += '<p class="soft">' + (is5() ? 'What does ' + esc(B()) + ' do first? Tap the actions in order.' : 'What does ' + esc(B()) + ' do first? Tap the actions in order.') + '</p>';
   h += '<div class="seq">' + seq + '</div>';
   if (g.got < g.part.length) h += '<div class="pool">' + pool + '</div>';
   else h += '<p class="score">' + (g.errors === 0 ? 'Perfect! 🎉' : 'Well done! 👍') + '</p><button class="ghost" data-act="ordListen">🔊 Écouter</button><button class="primary" data-act="close">Terminer</button>';
@@ -1747,7 +1747,7 @@ function diaryLine(en){
 function dayTitle(k){ var p = k.split('-'), d = new Date(+p[0], +p[1]-1, +p[2]); return DAYS[d.getDay()] + ' ' + nth(d.getDate()) + ' ' + MONTHS[d.getMonth()]; }
 function renderDiary(){
   $('diaryTitle').textContent = is5() ? B() + '’s diary' : B() + '’s day';
-  $('diaryLead').textContent = is5() ? B() + ' writes in the past simple. Read and listen!' : B() + ' écrit ce qui se passe, au présent. Lis et écoute !';
+  $('diaryLead').textContent = is5() ? B() + ' writes in the past simple. Read and listen!' : B() + ' writes in the present simple. Read and listen!';
   var ks = Object.keys(S.diary).sort().reverse();
   if (!ks.length) { $('diary').innerHTML = '<p class="empty">Rien d’écrit pour l’instant. Parle avec ' + esc(B()) + ' pour remplir son journal !</p>'; return; }
   $('diary').innerHTML = ks.map(function(k){

@@ -503,7 +503,7 @@ function speak(t){
   try {
     window.speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(String(t).replace(/’/g, "'").replace(/[^\x00-\x7F\u00C0-\u017F']/g, ''));
-    u.lang = 'en-GB'; if (VOICE) u.voice = VOICE; u.rate = 0.88; u.pitch = 1.25;
+    u.lang = 'en-GB'; var v8=window.DINO_VOICE_V8||{}; if(v8.voice)u.voice=v8.voice;else if(VOICE)u.voice=VOICE;u.rate=(v8.rate||0.92);u.pitch=1.0;
     window.speechSynthesis.speak(u);
   } catch(e) {}
 }
@@ -823,7 +823,7 @@ function renderRoom(){
   $('sky').textContent = c.asleep ? '🌙' : cls === 'evening' ? '🌇' : cls === 'morning' ? '🌅' : (S.outfit.date === dayKey(Date.now()) && S.outfit.sky ? S.outfit.sky : '☀️');
   var lv = level();
   dinoRoomDecor();
-  var stg = curStage(), size = Math.round((DinoPrefs.zone==='camp' ? 430 : 320) * SCALE[stg]), bd = $('buddy');
+  var stg = curStage(), size = Math.min(260, Math.round((DinoPrefs.zone==='camp' ? 265 : 245) * SCALE[stg])), bd = $('buddy');
   bd.style.width = size + 'px'; bd.style.height = size + 'px'; bd.style.marginLeft = (-size/2) + 'px';
   bd.className = 'buddy' + (S.legend ? ' legend' : '');
   var face = currentFace(c), opt = {crack: stg === 0 && S.xp >= 15};
@@ -2199,6 +2199,44 @@ refresh();window.addEventListener('pagehide',function(){observer.disconnect()},{
  };
  if(document.getElementById('tab-dex').classList.contains('on'))renderDexTab();
  if(document.getElementById('tab-evo').classList.contains('on'))renderEvo();
+})();
+</script>
+
+<!-- V8: natural voice selector, adjustable speech speed, safer full-body framing -->
+<style>
+/* Keep the entire dinosaur visible, including tail, horns and wings. */
+.room{isolation:isolate}
+.room .buddy{max-width:min(72%,270px);max-height:260px;overflow:visible!important;z-index:7}
+.room .buddy .bob{overflow:visible!important}
+.room .buddy .premium-pet{overflow:visible!important;display:block}
+.room .buddy .premium-pet image{image-rendering:auto}
+.room .buddy .outfit,.room .buddy .crown{pointer-events:none}
+.room .bubble{z-index:10;max-width:91%;font-size:clamp(13px,3.7vw,18px)}
+@media(max-width:430px){.room .buddy{max-height:225px}.room .bubble{top:53px}}
+.v8-voice-box{background:var(--card);padding:15px;border:2px solid var(--line);border-radius:20px;margin-top:14px}
+.v8-voice-box h3{margin:0 0 8px}.v8-voice-box label{display:block;margin:12px 0 5px;font-weight:600}
+.v8-voice-box select{width:100%}.v8-voice-box .v8-voice-actions{display:flex;gap:9px;margin-top:12px}
+.v8-voice-box .v8-voice-actions button{flex:1;min-height:44px;border:2px solid var(--line);border-radius:13px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.v8-voice-box small{color:var(--soft);display:block;line-height:1.5;margin-top:7px}
+</style>
+<script>
+(function(){
+ 'use strict';
+ var key='dino_buddy_voice_prefs_v8';
+ var saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
+ var box=document.createElement('section');box.className='v8-voice-box';
+ box.innerHTML='<h3>🎙️ Voix anglaise</h3><label for="v8Voice">Choisir une voix</label><select id="v8Voice" aria-label="Voix anglaise"><option value="">Voix automatique</option></select><label for="v8Speed">Vitesse de lecture : <span id="v8SpeedText">Normale</span></label><input id="v8Speed" type="range" min="0.75" max="1.10" step="0.05" value="0.90" style="width:100%"><div class="v8-voice-actions"><button type="button" id="v8Listen">▶ Écouter</button><button type="button" id="v8Stop">■ Arrêter</button></div><small>La qualité dépend des voix installées sur ton appareil. Privilégie une voix anglaise britannique naturelle si elle est disponible. Aucun compte ni service externe nécessaire.</small>';
+ var host=document.getElementById('tab-set');if(!host)return;
+ var anchor=host.querySelector('h3');if(anchor)host.insertBefore(box,anchor);else host.appendChild(box);
+ var sel=box.querySelector('#v8Voice'),rate=box.querySelector('#v8Speed'),val=box.querySelector('#v8SpeedText');
+ rate.value=String(Math.min(1.1,Math.max(.75,Number(saved.rate)||.9)));
+ function load(){if(!('speechSynthesis' in window))return;var list=speechSynthesis.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});var old=sel.value||saved.name||'';sel.innerHTML='<option value="">Automatique (anglais)</option>';list.sort(function(a,b){return (a.lang==='en-GB'?-1:0)-(b.lang==='en-GB'?-1:0)}).forEach(function(v){var opt=document.createElement('option');opt.value=v.voiceURI;opt.textContent=v.name+' — '+v.lang+(v.localService?'':' (en ligne)');sel.appendChild(opt)});sel.value=list.some(function(v){return v.voiceURI===old})?old:'';window.DINO_VOICE_V8={voice:list.find(function(v){return v.voiceURI===sel.value})||null,rate:parseFloat(rate.value)};}
+ function update(){val.textContent=Number(rate.value)<.85?'Lente':Number(rate.value)>1?'Rapide':'Naturelle';load();try{localStorage.setItem(key,JSON.stringify({name:sel.value,rate:parseFloat(rate.value)}))}catch(e){}}
+ sel.addEventListener('change',update);rate.addEventListener('input',update);
+ box.querySelector('#v8Listen').addEventListener('click',function(){if(typeof speak==='function')speak('Good morning! Welcome to Dino Buddy Park. Let us learn English together!')});
+ box.querySelector('#v8Stop').addEventListener('click',function(){if('speechSynthesis' in window)speechSynthesis.cancel()});
+ if('speechSynthesis' in window){speechSynthesis.addEventListener('voiceschanged',load);load();setTimeout(load,700)}
+ update();
 })();
 </script>
 </body>
